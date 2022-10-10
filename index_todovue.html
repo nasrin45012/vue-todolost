@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="styles.css"  rel="stylesheet">
+</head>
+<body>
+<div id="app">
+    <div class="header">
+        <h1>تو دو لیست</h1>
+        <input type="text" placeholder="کاری را بنویسید" v-model.trim="input">
+        <button class="addBtn" @click="addtodo"> اضافه کردن به لیست</button>
+<!--        <h3>{{ todos  }}</h3>-->
+
+    </div>
+
+    <ul>
+<todo-item  v-for="(todo,index) in todos"
+            :key="todo.text"
+            :todo="todo"
+            @checked="todo.completed=!todo.completed"
+            @delete_todo="deletetodo(index)"
+></todo-item>
+
+    </ul>
+</div>
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+    const  app=Vue.createApp({
+        data:() =>({
+            input:'',
+            todos:[{text:'first todo' ,completed:false},
+                { text:'secound todo' ,completed:false}]
+        }),
+         methods:{
+         addtodo() {
+             if ( this.input) {
+
+                 this.todos.push({text:this.input,completed:false});
+                 this.input = ""
+             }
+
+         },
+             deletetodo(index){
+             this.todos.splice(index,1)
+             }
+     }
+
+
+    });
+    app.component('TodoItem',{
+        template:
+        `        <li
+
+                 @click="$emit('checked')"
+                :class="{'checked':todo.completed}"
+
+>  {{ todo.text  }}
+            <button class="close" @click="$emit('delete_todo')">X</button> </li>`
+        ,
+        props:
+        ['todo']
+    })
+        app.mount('#app');
+
+
+</script>
+</body>
+</html>
